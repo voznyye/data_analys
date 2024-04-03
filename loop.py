@@ -2,11 +2,11 @@
 import intro
 import calcul
 
-liczbaPowtórzeń=4
+liczbaPowtórzeń=10
 # ograniczenie liczby powtórzeń pętli
 
 def main():
-    print('\nLICZBA KLASTRÓW ',calcul.liczbaKlastrów)
+    calcul.writeCsv('LICZBA KLASTRÓW ',calcul.liczbaKlastrów)
     intro.wczytajDane()
     intro.normalizujDane()
     calcul.losujCentroidy()
@@ -25,3 +25,5 @@ def main():
         calcul.wypiszKlastry()
         repeat+=1
 
+
+main()

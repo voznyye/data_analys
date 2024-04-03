@@ -1,4 +1,3 @@
-State,Gender,Year,Top Name,Occurences
 AK,F,1910,Mary,14
 AK,F,1911,Mary,12
 AK,F,1912,Mary,9

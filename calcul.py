@@ -6,12 +6,20 @@
 import math
 import random
 import intro
+import csv
 
-liczbaKlastrów=100
+
+liczbaKlastrów=6
 # poczatkowa liczba klastrów
 klastry=[]
 #każdy z klastrów jest listą krotekNormal położonych najbliżej centroidy
 Centroidy=[]
+
+
+def writeCsv(*args):
+    with open('wynik.csv', 'a', encoding='utf-8') as csvfile:
+        writer = csv.writer(csvfile)
+        writer.writerow(args)
 
 def test():
     print('\nLICZBA KLASTRÓW ',liczbaKlastrów)
@@ -20,7 +28,7 @@ def test():
     losujCentroidy()
     wypiszCentroidy()
     przypiszKrotkomNumeryKlastrów()
-    #intro.wypiszKrotkiNormal()
+    intro.wypiszKrotkiNormal()
     utwórzKlastry()
     wypiszKlastry()
     newCentroidy()
@@ -52,11 +60,11 @@ def losujCentroidy():
         i=i+1
 
 def wypiszCentroide(centroida):
-       print ('%4d %4d %4d %4d %7.3f'%(centroida[0],centroida[1],centroida[2],centroida[3],centroida[4]))
+       writeCsv('%4d %4d %4d %4d %7.3f'%(centroida[0],centroida[1],centroida[2],centroida[3],centroida[4]))
 
 def wypiszCentroidy():
 # wypisuje do interpretera aktualne wartości wszystkich centroid
-   print('CENTROIDY')
+   writeCsv('CENTROIDY')
    for centroida in Centroidy:
       wypiszCentroide(centroida)
 
@@ -91,9 +99,9 @@ def utwórzKlastry():
         klastry.append(klaster)
 
 def wypiszKlaster(nrKlastra):
-    print('NUMER KLASTRA ',nrKlastra)
+    writeCsv('NUMER KLASTRA ',nrKlastra)
     for krotka in klastry[nrKlastra]:
-        print ('%4d %4d %4d %4d %7.3f %4d'%(krotka[0],krotka[1],krotka[2],krotka[3],krotka[4],krotka[5]))
+        writeCsv ('%4d %4d %4d %4d %7.3f %4d'%(krotka[0],krotka[1],krotka[2],krotka[3],krotka[4],krotka[5]))
 
 def wypiszKlastry():
 # wypisuje do interpretera aktualne wartości wszystkich klastrów
@@ -131,7 +139,7 @@ def newCentroide(klaster):
 
 def newCentroidy():
     Centroidy=[]
-    print('\nprzesunięto centroidy ------------')
+    writeCsv('\nprzesunięto centroidy ------------')
     for nr in range(liczbaKlastrów):
         Centroidy.append(newCentroide(klastry[nr]))
 

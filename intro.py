@@ -4,6 +4,8 @@
 # funkcje wczytywania i wypisywania krotek,
 # funkcję normalizacji danych
 
+from calcul import writeCsv
+
 def test():
     wczytajDane()
     #wypiszDane()
@@ -41,7 +43,7 @@ names= {'Mary':1,'Linda':2,'Debra':3,'Lisa':4,'Michelle':5,'Jennifer':6,'Jessica
 def wczytajDane():
 # wczytuje dane ze wskazanego pliku tekstowego do listy krotkiDane
    import csv
-   with open('C:\WSTI\AEH zima 21_22\AI\dane.txt','r') as csvfile:
+   with open('Dane.txt','r') as csvfile:
       csvreader = csv.reader(csvfile)
       for krotka in csvreader:
          krotkiDane.append(krotka)
@@ -49,13 +51,13 @@ def wczytajDane():
 def wypiszDane():
 # wypisuje zawartość listy krotkiDane do interpretera
    for krotka in krotkiDane:
-       print(krotka[0]," ",krotka[1]," ",krotka[2],'%-10s'%(krotka[3]),'%4s'%krotka[4])
+       writeCsv(krotka[0]," ",krotka[1]," ",krotka[2],'%-10s'%(krotka[3]),'%4s'%krotka[4])
 
 def wypiszKrotkiNormal():
 # wypisuje zawartość listy krotkiNormal do interpretera
-   print('KROTKI NORMAL')
+   writeCsv('KROTKI NORMAL')
    for krotka in krotkiNormal:
-      print ('%4d %4d %4d %4d %7.3f %4d'%(krotka[0],krotka[1],krotka[2],krotka[3],krotka[4],krotka[5]))
+      writeCsv ('%4d %4d %4d %4d %7.3f %4d'%(krotka[0],krotka[1],krotka[2],krotka[3],krotka[4],krotka[5]))
 
 
 def normalizujDane():
