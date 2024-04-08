@@ -1,2 +1,2 @@
-Minds: python reaciving csv file upens it and sends to GoLang and this mf procceses the data in 0.01 sec 
+Minds: using Golang in high-perfomance parts of code, implement 2 infografics radar chart and iteractive procces vizualisation (https://plotly.com/python/radar-chart/)
 csv output implemented

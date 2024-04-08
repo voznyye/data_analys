@@ -9,7 +9,7 @@ import intro
 import csv
 
 
-liczbaKlastrów=6
+liczbaKlastrów=5
 # poczatkowa liczba klastrów
 klastry=[]
 #każdy z klastrów jest listą krotekNormal położonych najbliżej centroidy
@@ -22,7 +22,7 @@ def writeCsv(*args):
         writer.writerow(args)
 
 def test():
-    print('\nLICZBA KLASTRÓW ',liczbaKlastrów)
+    print('\nLICZBA KLASTRÓW',liczbaKlastrów)
     intro.wczytajDane()
     intro.normalizujDane()
     losujCentroidy()
@@ -60,7 +60,7 @@ def losujCentroidy():
         i=i+1
 
 def wypiszCentroide(centroida):
-       writeCsv('%4d %4d %4d %4d %7.3f'%(centroida[0],centroida[1],centroida[2],centroida[3],centroida[4]))
+       writeCsv(centroida[0],centroida[1],centroida[2],centroida[3],centroida[4])
 
 def wypiszCentroidy():
 # wypisuje do interpretera aktualne wartości wszystkich centroid
@@ -99,9 +99,9 @@ def utwórzKlastry():
         klastry.append(klaster)
 
 def wypiszKlaster(nrKlastra):
-    writeCsv('NUMER KLASTRA ',nrKlastra)
+    writeCsv('NUMER KLASTRA',nrKlastra)
     for krotka in klastry[nrKlastra]:
-        writeCsv ('%4d %4d %4d %4d %7.3f %4d'%(krotka[0],krotka[1],krotka[2],krotka[3],krotka[4],krotka[5]))
+        writeCsv (krotka[0],krotka[1],krotka[2],krotka[3],krotka[4],krotka[5])
 
 def wypiszKlastry():
 # wypisuje do interpretera aktualne wartości wszystkich klastrów

@@ -51,13 +51,13 @@ def wczytajDane():
 def wypiszDane():
 # wypisuje zawartość listy krotkiDane do interpretera
    for krotka in krotkiDane:
-       writeCsv(krotka[0]," ",krotka[1]," ",krotka[2],'%-10s'%(krotka[3]),'%4s'%krotka[4])
+       writeCsv(krotka[0],krotka[1],krotka[2],krotka[3],krotka[4])
 
 def wypiszKrotkiNormal():
 # wypisuje zawartość listy krotkiNormal do interpretera
    writeCsv('KROTKI NORMAL')
    for krotka in krotkiNormal:
-      writeCsv ('%4d %4d %4d %4d %7.3f %4d'%(krotka[0],krotka[1],krotka[2],krotka[3],krotka[4],krotka[5]))
+      writeCsv (krotka[0],krotka[1],krotka[2],krotka[3],krotka[4],krotka[5])
 
 
 def normalizujDane():
