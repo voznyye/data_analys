@@ -1,71 +1,40 @@
-import plotly.graph_objects as go
 import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.cluster import KMeans
+from sklearn.preprocessing import StandardScaler
 
+# Создадим DataFrame из предоставленных данных
+data = {
+    "YearOfBirth": [1880]*19,
+    "Name": ["Mary", "Anna", "Emma", "Elizabeth", "Minnie", "Margaret", "Ida", "Alice", "Bertha", "Sarah",
+             "Annie", "Clara", "Ella", "Florence", "Cora", "Martha", "Laura", "Nellie", "Grace"],
+    "Sex": ["F"]*19,
+    "Number": [7065, 2604, 2003, 1939, 1746, 1578, 1472, 1414, 1320, 1288,
+               1258, 1226, 1156, 1063, 1045, 1040, 1012, 995, 982]
+}
 
-df = pd.read_csv("https://raw.githubusercontent.com/plotly/datasets/master/hobbs-pearson-trials.csv")
+df = pd.DataFrame(data)
 
-fig = go.Figure()
+# Выберем только числовые данные для кластеризации
+X = df[['Number']]
 
-fig.add_trace(go.Scatterpolargl(
-      r = df.trial_1_r,
-      theta = df.trial_1_theta,
-      name = "Trial 1",
-      marker=dict(size=15, color="mediumseagreen")
-    ))
-fig.add_trace(go.Scatterpolargl(
-      r = df.trial_2_r,
-      theta = df.trial_2_theta,
-      name = "Trial 2",
-      marker=dict(size=20, color="darkorange")
-    ))
-fig.add_trace(go.Scatterpolargl(
-      r = df.trial_3_r,
-      theta = df.trial_3_theta,
-      name = "Trial 3",
-      marker=dict(size=12, color="mediumpurple")
-    ))
-fig.add_trace(go.Scatterpolargl(
-      r = df.trial_4_r,
-      theta = df.trial_4_theta,
-      name = "Trial 4",
-      marker=dict(size=22, color = "magenta")
-    ))
-fig.add_trace(go.Scatterpolargl(
-      r = df.trial_5_r,
-      theta = df.trial_5_theta,
-      name = "Trial 5",
-      marker=dict(size=19, color = "limegreen")
-      ))
-fig.add_trace(go.Scatterpolargl(
-      r = df.trial_6_r,
-      theta = df.trial_6_theta,
-      name = "Trial 6",
-      marker=dict(size=10, color = "gold")
-      ))
+# Стандартизация данных
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X)
 
-# Common parameters for all traces
-fig.update_traces(mode="markers", marker=dict(line_color='white', opacity=0.7))
+# Применим алгоритм K-means
+kmeans = KMeans(n_clusters=3, random_state=42)
+df['Cluster'] = kmeans.fit_predict(X_scaled)
 
-fig.update_layout(
-    title = "Hobbs-Pearson Trials",
-    font_size = 15,
-    showlegend = False,
-    polar = dict(
-      bgcolor = "rgb(223, 223, 223)",
-      angularaxis = dict(
-        linewidth = 3,
-        showline=True,
-        linecolor='black'
-      ),
-      radialaxis = dict(
-        side = "counterclockwise",
-        showline = True,
-        linewidth = 2,
-        gridcolor = "white",
-        gridwidth = 2,
-      )
-    ),
-    paper_bgcolor = "rgb(223, 223, 223)"
-)
+# Визуализация результатов кластеризации
+plt.figure(figsize=(10, 6))
+plt.scatter(df['Number'], [0]*len(df), c=df['Cluster'], cmap='viridis')
+for i, txt in enumerate(df['Name']):
+    plt.annotate(txt, (df['Number'][i], 0), textcoords="offset points", xytext=(0,10), ha='center')
+plt.xlabel('Number of Occurrences')
+plt.title('K-means Clustering of Names by Number of Occurrences')
+plt.yticks([])
+plt.show()
 
-fig.show()
+# Выведем DataFrame с результатами кластеризации
+print(df)

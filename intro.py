@@ -79,6 +79,3 @@ def normalizujDane():
       krotka.append(result)
       krotka.append(-1)
       krotkiNormal.append(krotka)
-
-
-
