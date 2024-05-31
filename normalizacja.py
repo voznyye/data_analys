@@ -9,34 +9,29 @@ data = pd.read_csv('babyNamesUSYOB-full.csv')
 # Удаление строк с отсутствующими значениями
 data.dropna(inplace=True)
 
-# Преобразование имен в числовые значения
+# Преобразование имен и пола в числовые значения
 label_encoder = LabelEncoder()
 data['NameEncoded'] = label_encoder.fit_transform(data['Name'])
+data['SexEncoded'] = label_encoder.fit_transform(data['Sex'])
 
 # Выбор признаков для кластеризации
-X = data[['YearOfBirth', 'NameEncoded']]
+x = data[['YearOfBirth', 'NameEncoded', 'SexEncoded', 'Number']]
+y = data[['YearOfBirth', 'Name', 'NameEncoded', 'Sex', 'SexEncoded', 'Number']]
 
 # Создание объекта для масштабирования данных
 scaler = StandardScaler()
 
 # Нормализация данных
-X_scaled = scaler.fit_transform(X)
+X_scaled = scaler.fit_transform(x)
 
-# Инициализация модели k-means
-kmeans = KMeans(n_clusters=12, random_state=42)
+# Преобразование нормализованных данных обратно в DataFrame
+X_scaled_df = pd.DataFrame(X_scaled, columns=['YearOfBirth', 'NameEncoded', 'SexEncoded', 'Number'])
 
-# Обучение модели
-kmeans.fit(X_scaled)
+X_scaled_df.to_csv('babyNames_normalized.csv', index=False)
 
-# Получение меток кластеров для каждого примера
-labels = kmeans.labels_
+# Объединение нормализованных данных и оригинальных данных в нужном порядке
+combined_df = y.copy()
+combined_df[['YearOfBirth', 'NameEncoded', 'SexEncoded', 'Number']] = X_scaled_df[['YearOfBirth', 'NameEncoded', 'SexEncoded', 'Number']]
 
-# Добавление меток кластеров в исходные данные
-data['Cluster'] = labels
-
-# Вывод результатов кластеризации
-print(data.head())
-
-# Визуализация результатов с использованием plotly
-fig = px.scatter(data, x='YearOfBirth', y='NameEncoded', color='Cluster', title='Clusters of Birth Names')
-fig.show()
+# Запись объединенных данных в новый CSV файл
+combined_df.to_csv('babyNames_combined.csv', index=False)
