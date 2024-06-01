@@ -1,6 +1,6 @@
 import calcul
 
-liczbaPowtórzeń=8
+liczbaPowtórzeń=10
 # ograniczenie liczby powtórzeń pętli
 
 def main():
