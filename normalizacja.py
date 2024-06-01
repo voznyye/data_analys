@@ -27,6 +27,7 @@ X_scaled = scaler.fit_transform(x)
 # Преобразование нормализованных данных обратно в DataFrame
 X_scaled_df = pd.DataFrame(X_scaled, columns=['YearOfBirth', 'NameEncoded', 'SexEncoded', 'Number'])
 
+# Сохранение нормализованных данных в CSV файл
 X_scaled_df.to_csv('babyNames_normalized.csv', index=False)
 
 # Объединение нормализованных данных и оригинальных данных в нужном порядке

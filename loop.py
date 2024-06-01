@@ -1,5 +1,3 @@
-
-import intro
 import calcul
 
 liczbaPowtórzeń=8
@@ -7,8 +5,6 @@ liczbaPowtórzeń=8
 
 def main():
     calcul.writeCsv('LICZBA KLASTRÓW',calcul.liczbaKlastrów)
-    intro.wczytajDane()
-    intro.normalizujDane()
     calcul.losujCentroidy()
     calcul.wypiszCentroidy()
     calcul.przypiszKrotkomNumeryKlastrów()
@@ -27,4 +23,3 @@ def main():
 
 
 main()
-intro.wypiszKrotkiNormal()

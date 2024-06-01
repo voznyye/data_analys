@@ -5,8 +5,19 @@
 
 import math
 import random
-import intro
 import csv
+
+
+# Открытие файла и чтение данных
+with open('babyNames_normalized.csv', newline='\n') as f:
+    reader = csv.reader(f)
+    dane_normal = list(reader)
+    
+# Преобразование данных в float
+dane_unpacked = []
+for row in dane_normal:
+    float_row = [float(item) for item in row]
+    dane_unpacked.append(float_row)
 
 
 liczbaKlastrów=5
@@ -21,35 +32,21 @@ def writeCsv(*args):
         writer = csv.writer(csvfile)
         writer.writerow(args)
 
-def test():
-    print('\nLICZBA KLASTRÓW',liczbaKlastrów)
-    intro.wczytajDane()
-    intro.normalizujDane()
-    losujCentroidy()
-    wypiszCentroidy()
-    przypiszKrotkomNumeryKlastrów()
-    intro.wypiszKrotkiNormal()
-    utwórzKlastry()
-    wypiszKlastry()
-    newCentroidy()
-    wypiszCentroidy()
-
 def losujCentroide():
 # losuje początkowe położenie centroidy dla pojedynczego klastra
     centroida=[]
-    state=random.randint(2,102)
-    centroida.append(state)
-    sex=random.choice([50,100])
-    centroida.append(sex)
-    year=random.randint(0,102)
-    centroida.append(year)
-    if sex==100:
-        name=random.randint(1,56)
-    else:
-        name=random.randint(57,96)
-    centroida.append(name)
-    evens=random.uniform(0.18,140.0)
-    centroida.append(evens)
+    YearOfBirth=random.uniform(-0.00012687038921343276,9.994243197473356)
+    centroida.append(YearOfBirth)
+    
+    NameEncoded=random.choice([-0.8296983862193115,1.2052572556597374])
+    centroida.append(NameEncoded)
+    
+    SexEncoded=random.uniform(-0.00012687038921343276, 9.994243197473356)
+    centroida.append(SexEncoded)
+    
+    Number=random.uniform(-0.00012687038921343276,9.994243197473356)
+    centroida.append(Number)
+    
     return centroida
 
 def losujCentroidy():
@@ -60,7 +57,7 @@ def losujCentroidy():
         i=i+1
 
 def wypiszCentroide(centroida):
-       writeCsv(centroida[0],centroida[1],centroida[2],centroida[3],centroida[4])
+       writeCsv(centroida[0],centroida[1],centroida[2],centroida[3])
 
 def wypiszCentroidy():
 # wypisuje do interpretera aktualne wartości wszystkich centroid
@@ -73,7 +70,7 @@ def EuklidesPower(krotkaNormal,centroida):
    suma=0
    for i in range(0,len(krotkaNormal)-1):
        if i != 1:
-          dif=centroida[i]-krotkaNormal[i]
+          dif=float(centroida[i]) - float(krotkaNormal[i])
           difpow=math.pow(dif,2)
           suma+=difpow
    distance=math.sqrt(suma)
@@ -81,27 +78,27 @@ def EuklidesPower(krotkaNormal,centroida):
 
 def przypiszKrotkomNumeryKlastrów():
 # przypisuje każdej znormalizowanej krotce najbliższą centroidę
-    for krotkaNormal in intro.krotkiNormal:
+    for dane_unpacked in dane_normal:
         minimum=1e100
         for i in range(len(Centroidy)):
-            next=EuklidesPower(krotkaNormal,Centroidy[i])
+            next=EuklidesPower(dane_unpacked,Centroidy[i])
             if next<minimum:
                 minimum=next
                 minimumIndex=i
-        krotkaNormal[5]=minimumIndex
+        dane_unpacked[3]=minimumIndex
 
 def utwórzKlastry():
     for i in range(0,len(Centroidy)):
         klaster=[]
-        for krotka in intro.krotkiNormal:
-            if krotka[5]==i:
+        for krotka in dane_normal:
+            if krotka[3]==i:
                 klaster.append(krotka)
         klastry.append(klaster)
 
 def wypiszKlaster(nrKlastra):
     writeCsv('NUMER KLASTRA',nrKlastra)
     for krotka in klastry[nrKlastra]:
-        writeCsv (krotka[0],krotka[1],krotka[2],krotka[3],krotka[4],krotka[5])
+        writeCsv (krotka[0],krotka[1],krotka[2],krotka[3])
 
 def wypiszKlastry():
 # wypisuje do interpretera aktualne wartości wszystkich klastrów
@@ -111,7 +108,7 @@ def wypiszKlastry():
 def newCentroide(klaster):
 # oblicza nowe położenie centroidy we wskazanym klastrze
 # i zwraca wynik w postaci nowej centroidy dla wskazanego klastra
-    sumState=sumYear=sumEven=0
+    sumState=sumYear=0
     sumFemName=sumMalName=numFemName=numMalName=0
     centroida=[]
     for krotka in klaster:
@@ -123,18 +120,16 @@ def newCentroide(klaster):
             sumMalName+=krotka[3]
             numMalName+=1
         sumYear+=krotka[2]
-        sumEven+=krotka[4]
     centroida.append(sumState//len(klaster))
     if numFemName>=numMalName:
-        centroida.append(100)
+        centroida.append(-0.8296983862193115)
     else:
-        centroida.append(50)
+        centroida.append(1.2052572556597374)
     centroida.append(sumYear//len(klaster))
     if numFemName>=numMalName:
         centroida.append(sumFemName//numFemName)
     else:
         centroida.append(sumMalName//numMalName)
-    centroida.append(sumEven/len(klaster))
     return centroida
 
 def newCentroidy():
