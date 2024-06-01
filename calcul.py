@@ -102,4 +102,3 @@ def newCentroidy():
     global Centroidy
     writeCsv('\nprzesunięто centroidy ------------')
     Centroidy = [newCentroide(klastry[nr]) for nr in range(liczbaKlastrów)]
-
