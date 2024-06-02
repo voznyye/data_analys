@@ -1,104 +1,102 @@
 import math
 import random
 import csv
+import numpy as np
+import pandas as pd
 
-# Открытие файла и чтение данных
 with open('babyNames_normalized.csv', newline='\n') as f:
     reader = csv.reader(f)
     dane_normal = list(reader)
-    
-# Преобразование данных в float
-dane_unpacked = []
-for row in dane_normal:
-    float_row = [float(item) for item in row]
-    dane_unpacked.append(float_row)
+
+dane_unpacked = np.array([[float(item) for item in row] for row in dane_normal])
 
 liczbaKlastrów = 15
 klastry = []
 Centroidy = []
 
-def writeCsv(*args):
-    with open('wynik.csv', 'a', encoding='utf-8') as csvfile:
-        writer = csv.writer(csvfile)
-        writer.writerow(args)
-
-def losujCentroide():
-    centroida = []
-    YearOfBirth = random.uniform(0.01, 9.1)
-    centroida.append(YearOfBirth)
-    
-    NameEncoded = random.choice([0.01, 9.1])
-    centroida.append(NameEncoded)
-    
-    SexEncoded = random.uniform(0.01, 9.1)
-    centroida.append(SexEncoded)
-    
-    Number = random.uniform(0.01, 9.1)
-    centroida.append(Number)
-    
-    return centroida
-
-def losujCentroidy():
-    global Centroidy
-    Centroidy = [losujCentroide() for _ in range(liczbaKlastrów)]
-
-def wypiszCentroide(centroida):
-    writeCsv(centroida[0], centroida[1], centroida[2], centroida[3])
-
-def wypiszCentroidy():
-    writeCsv('CENTROIDY')
-    for centroida in Centroidy:
-        wypiszCentroide(centroida)
-
 def EuklidesPower(krotkaNormal, centroida):
-    suma = 0
-    for i in range(len(krotkaNormal)):
-        if i != 1:
-            dif = float(centroida[i]) - float(krotkaNormal[i])
-            difpow = math.pow(dif, 2)
-            suma += difpow
+    if centroida is None:
+        return float('inf')  # Возвращаем бесконечность, если центроида нет
+    dif = np.array(centroida[:4]) - np.array(krotkaNormal[:4])
+    difpow = np.square(dif)
+    suma = np.sum(difpow)
     return suma
+
+def kmeans_plus_plus():
+    global Centroidy
+    Centroidy = []
+    # Шаг 1: случайный выбор первой центроиды
+    first_centroid = dane_unpacked[random.randint(0, len(dane_unpacked) - 1)]
+    Centroidy.append(first_centroid)
+
+    # Шаг 2: выбор остальных центроид
+    for _ in range(1, liczbaKlastrów):
+        distances = np.zeros(len(dane_unpacked))
+        for i, krotka in enumerate(dane_unpacked):
+            min_dist = min(EuklidesPower(krotka, centroida) for centroida in Centroidy)
+            distances[i] = min_dist
+
+        sum_distances = np.sum(distances)
+        probabilities = distances / sum_distances
+        cumulative_probabilities = np.cumsum(probabilities)
+        r = random.random()
+
+        for i, cum_prob in enumerate(cumulative_probabilities):
+            if r < cum_prob:
+                Centroidy.append(dane_unpacked[i])
+                break
 
 def przypiszKrotkomNumeryKlastrów():
     global dane_unpacked
-    for krotka in dane_unpacked:
+    new_column = np.empty((len(dane_unpacked), 1))  # Создаем новый столбец
+    for i in range(len(dane_unpacked)):
         minimum = float('inf')
         minimumIndex = -1
-        for i, centroida in enumerate(Centroidy):
-            dist = EuklidesPower(krotka, centroida)
+        for j, centroida in enumerate(Centroidy):
+            dist = EuklidesPower(dane_unpacked[i], centroida)
             if dist < minimum:
                 minimum = dist
-                minimumIndex = i
-        krotka.append(minimumIndex)
+                minimumIndex = j
+        new_column[i] = minimumIndex  # Записываем новое значение в новый столбец
+    dane_unpacked = np.hstack((dane_unpacked, new_column))  # Добавляем новый столбец к исходному массиву
 
 def utwórzKlastry():
     global klastry
+    dane_copy = dane_unpacked.copy()  # Создаем копию массива
     klastry = [[] for _ in range(liczbaKlastrów)]
-    for krotka in dane_unpacked:
-        cluster_index = krotka[-1]
+    for krotka in dane_copy:
+        cluster_index = int(krotka[-1])
         klastry[cluster_index].append(krotka)
 
-def wypiszKlaster(nrKlastra):
-    writeCsv('NUMER KLASTRA', nrKlastra)
-    for krotka in klastry[nrKlastra]:
-        writeCsv(krotka[0], krotka[1], krotka[2], krotka[3])
+def wypiszCentroidy():
+    centroidy_df = pd.DataFrame(Centroidy, columns=['YearOfBirth', 'NameEncoded', 'SexEncoded', 'NumberOfBirth'])
+    centroidy_df['Cluster'] = range(len(Centroidy))
+    centroidy_df.to_csv('wynik.csv', index=False, mode='a')
 
 def wypiszKlastry():
+    klastry_data = []
     for numer in range(len(Centroidy)):
-        wypiszKlaster(numer)
+        for krotka in klastry[numer]:
+            klastry_data.append(list(krotka[:4]) + [numer])
+    klastry_df = pd.DataFrame(klastry_data, columns=['YearOfBirth', 'NameEncoded', 'SexEncoded', 'NumberOfBirth', 'ClusterNumber'])
+    klastry_df.to_csv('wynik.csv', index=False, mode='a')
 
 def newCentroide(klaster):
     if not klaster:
-        return losujCentroide()
-    centroida = []
-    for i in range(len(klaster[0]) - 1):
-        if i != 1:
-            centroida.append(sum(krotka[i] for krotka in klaster) / len(klaster))
-        else:
-            centroida.append(random.choice([-0.8296983862193115, 1.2052572556597374]))
-    return centroida
+        return None
+    centroida = np.mean(klaster, axis=0)
+    centroida[-1] = np.mean(klaster[-1])  # Используем среднее значение NumberOfBirth из существующих данных
+    return centroida[:4]
+
 
 def newCentroidy():
     global Centroidy
-    writeCsv('\nprzesunięто centroidy ------------')
-    Centroidy = [newCentroide(klastry[nr]) for nr in range(liczbaKlastrów)]
+    new_Centroidy = []
+    for nr in range(liczbaKlastrów):
+        new_centroida = newCentroide(klastry[nr])
+        if new_centroida is None:
+            # Если кластер пустой, сохраняем старую центроиду
+            new_centroida = Centroidy[nr]
+        new_Centroidy.append(new_centroida)
+    Centroidy = new_Centroidy
+

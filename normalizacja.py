@@ -3,36 +3,40 @@ from sklearn.cluster import KMeans
 from sklearn.preprocessing import StandardScaler, LabelEncoder
 import plotly.express as px
 
-# Загрузка данных из CSV файла
-data = pd.read_csv('babyNamesUSYOB-full.csv')
 
-# Удаление строк с отсутствующими значениями
-data.dropna(inplace=True)
+def normalizuj():
+    # Загрузка данных из CSV файла
+    data = pd.read_csv('babyNamesUSYOB-full.csv')
 
-# Преобразование имен и пола в числовые значения
-label_encoder = LabelEncoder()
-data['NameEncoded'] = label_encoder.fit_transform(data['Name'])
-data['SexEncoded'] = label_encoder.fit_transform(data['Sex'])
+    # Удаление строк с отсутствующими значениями
+    data.dropna(inplace=True)
 
-# Выбор признаков для кластеризации
-x = data[['YearOfBirth', 'NameEncoded', 'SexEncoded', 'Number']]
-y = data[['YearOfBirth', 'Name', 'NameEncoded', 'Sex', 'SexEncoded', 'Number']]
+    # Преобразование имен и пола в числовые значения
+    label_encoder = LabelEncoder()
+    data['NameEncoded'] = label_encoder.fit_transform(data['Name'])
+    data['SexEncoded'] = label_encoder.fit_transform(data['Sex'])
+    data['NumberEncoded'] = label_encoder.fit_transform(data['Number'])
+    data['YearEncoded'] = label_encoder.fit_transform(data['YearOfBirth'])
 
-# Создание объекта для масштабирования данных
-scaler = StandardScaler()
+    # Выбор признаков для кластеризации
+    x = data[['YearEncoded', 'NameEncoded', 'SexEncoded', 'NumberEncoded']]
+    y = data[['YearOfBirth', 'YearEncoded', 'Name', 'NameEncoded', 'Sex', 'SexEncoded', 'Number', 'NumberEncoded']]
 
-# Нормализация данных
-X_scaled = scaler.fit_transform(x)
+    # Создание объекта для масштабирования данных
+    scaler = StandardScaler()
 
-# Преобразование нормализованных данных обратно в DataFrame
-X_scaled_df = pd.DataFrame(X_scaled, columns=['YearOfBirth', 'NameEncoded', 'SexEncoded', 'Number'])
+    # Нормализация данных
+    X_scaled = scaler.fit_transform(x)
 
-# Сохранение нормализованных данных в CSV файл
-X_scaled_df.to_csv('babyNames_normalized.csv', index=False)
+    # Преобразование нормализованных данных обратно в DataFrame
+    X_scaled_df = pd.DataFrame(X_scaled, columns=['YearEncoded', 'NameEncoded', 'SexEncoded', 'NumberEncoded'])
 
-# Объединение нормализованных данных и оригинальных данных в нужном порядке
-combined_df = y.copy()
-combined_df[['YearOfBirth', 'NameEncoded', 'SexEncoded', 'Number']] = X_scaled_df[['YearOfBirth', 'NameEncoded', 'SexEncoded', 'Number']]
+    # Сохранение нормализованных данных в CSV файл
+    X_scaled_df.to_csv('babyNames_normalized.csv', index=False)
 
-# Запись объединенных данных в новый CSV файл
-combined_df.to_csv('babyNames_combined.csv', index=False)
+    # Объединение нормализованных данных и оригинальных данных в нужном порядке
+    combined_df = y.copy()
+    combined_df[['YearEncoded', 'NameEncoded', 'SexEncoded', 'NumberEncoded']] = X_scaled_df[['YearEncoded', 'NameEncoded', 'SexEncoded', 'NumberEncoded']]
+
+    # Запись объединенных данных в новый CSV файл
+    combined_df.to_csv('babyNames_combined.csv', index=False)
