@@ -11,7 +11,7 @@ def main():
     c = 0
     print(f"iteration {c}: completed")
 
-    for _ in range(6):
+    for _ in range(10):
         calcul.newCentroidy()
         calcul.przypiszKrotkomNumeryKlastrów()
         calcul. utwórzKlastry()

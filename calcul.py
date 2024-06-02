@@ -10,7 +10,7 @@ with open('babyNames_normalized.csv', newline='\n') as f:
 
 dane_unpacked = np.array([[float(item) for item in row] for row in dane_normal])
 
-liczbaKlastrów = 3
+liczbaKlastrów = 4
 klastry = []
 Centroidy = []
 

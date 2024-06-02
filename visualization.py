@@ -47,21 +47,33 @@ def elbow():
 
 
 
-def visual():
-
+def visual_matplotlib():
+    matplotlib.use('agg')
     merged_df = pd.read_csv('wynik_combined.csv')
-
-    fig = px.scatter(merged_df, 
-                    x='YearOfBirth', 
-                    y='Name ', 
-                    color='ClusterNumber',
-                    hover_data=['YearOfBirth','Name', 'Sex', 'Number','ClusterNumber'],
-                    title='Number of Births by Year and Cluster')
     
+    plt.figure(figsize=(16, 10))
+    plt.scatter(merged_df['YearEncoded'], merged_df['Number'], c=merged_df['ClusterNumber'])
+    plt.colorbar(label='Cluster Number')
+    plt.xlabel('Name Encoded')
+    plt.ylabel('Year Encoded')
+    plt.title('Scatter Plot of Names by Year and Cluster')
+    plt.savefig('scatter_plot.png')
 
+
+def visual_plotly():
+    merged_df = pd.read_csv('wynik_combined.csv')
+    
+    fig = px.scatter(merged_df, 
+                     x='Number', 
+                     y='Name', 
+                     color='ClusterNumber',
+                     hover_data=['YearOfBirth', 'Name', 'Sex', 'Number', 'ClusterNumber'],
+                     title='Number of Births by Year and Cluster')
+    
     fig.write_image("plot2.png")
 
-    fig.show()
 
 
-visual()
+
+# visual_plotly()
+visual_matplotlib()
