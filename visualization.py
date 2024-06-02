@@ -4,7 +4,6 @@ import plotly.express as px
 import numpy as np
 from sklearn.metrics import silhouette_score
 import matplotlib.pyplot as plt
-import seaborn as sns
 import matplotlib
 
 def elbow():
@@ -18,7 +17,7 @@ def elbow():
     # Determine the optimal number of clusters using the Elbow method
     wcss = []
     silhouette_scores = []
-    cluster_range = range(5, 9)
+    cluster_range = range(2, 5)
 
     for n_clusters in cluster_range:
         kmeans = KMeans(n_clusters=n_clusters, random_state=42, n_init=10, max_iter=10)
@@ -51,7 +50,7 @@ def elbow():
     plt.ylabel('Silhouette Score')
 
     plt.tight_layout()
-    plt.savefig('analiz.png')
+    plt.savefig('analiz1.png')
 
 
 
@@ -60,21 +59,21 @@ def visual():
     # Load the updated CSV file
     merged_df = pd.read_csv('wynik_combined.csv')
 
-    # Create a scatter plot
+    # Create a scatter plot, columns YearOfBirth,YearEncoded,Name,NameEncoded,Sex,SexEncoded,Number,NumberEncoded,ClusterNumber
     fig = px.scatter(merged_df, 
                     x='YearOfBirth', 
-                    y='Number', 
+                    y='Name ', 
                     color='ClusterNumber',
-                    hover_data=['Name', 'Sex', 'Number'],
+                    hover_data=['YearOfBirth','Name', 'Sex', 'Number','ClusterNumber'],
                     title='Number of Births by Year and Cluster')
     
 
     # Save the figure as a PNG file
-    # fig.write_image("plot.png")
+    fig.write_image("plot2.png")
 
     # Show the plot
     fig.show()
 
 
-# visual()
-elbow()
+visual()
+# elbow()

@@ -1,7 +1,5 @@
 import pandas as pd
-from sklearn.cluster import KMeans
 from sklearn.preprocessing import StandardScaler, LabelEncoder
-import plotly.express as px
 
 
 def normalizuj():
