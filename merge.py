@@ -17,9 +17,9 @@ def merge():
     wynik_df.dropna(subset=['YearEncoded', 'NameEncoded', 'SexEncoded'], inplace=True)
 
     # Convert columns to the appropriate data types
-    wynik_df['YearEncoded'] = wynik_df['YearEncoded'].astype('float64')
-    wynik_df['NameEncoded'] = wynik_df['NameEncoded'].astype('float64')
-    wynik_df['SexEncoded'] = wynik_df['SexEncoded'].astype('float64')
+    wynik_df['YearEncoded'] = wynik_df['YearEncoded'].astype('float128')
+    wynik_df['NameEncoded'] = wynik_df['NameEncoded'].astype('float128')
+    wynik_df['SexEncoded'] = wynik_df['SexEncoded'].astype('float128')
     wynik_df['ClusterNumber'] = wynik_df['ClusterNumber'].astype('int64')
 
     # Merge the DataFrames on 'YearOfBirth', 'NameEncoded', and 'SexEncoded'

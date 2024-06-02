@@ -13,7 +13,7 @@ def main():
     print(f"iteration {c}: completed")
 
     # Перераспределение кластеров
-    for _ in range(7):  # Количество итераций перераспределения
+    for _ in range(6):  # Количество итераций перераспределения
         calcul.newCentroidy()
         calcul.przypiszKrotkomNumeryKlastrów()
         calcul. utwórzKlastry()

@@ -1,39 +1,58 @@
-import matplotlib.pyplot as plt
-import matplotlib
 from sklearn.cluster import KMeans
 import pandas as pd
 import plotly.express as px
+import numpy as np
+from sklearn.metrics import silhouette_score
+import matplotlib.pyplot as plt
+import seaborn as sns
+import matplotlib
 
-
-def elbov():
+def elbow():
     matplotlib.use('agg')
-    # Чтение данных
-    data = pd.read_csv('babyNames_normalized.csv')
+    # Load the normalized data
+    normalized_df = pd.read_csv('babyNames_normalized.csv')
 
-    # Преобразование данных в float
-    data = data.astype(float)
+    # Remove non-numeric columns if any
+    numeric_df = normalized_df.select_dtypes(include=[np.number])
 
-    def calculate_sse(data, max_k):
-        sse = []
-        for k in range(1, max_k + 1):
-            kmeans = KMeans(n_clusters=k, random_state=42)
-            kmeans.fit(data)
-            sse.append(kmeans.inertia_)
-        return sse
+    # Determine the optimal number of clusters using the Elbow method
+    wcss = []
+    silhouette_scores = []
+    cluster_range = range(5, 9)
 
-    # Определение максимального количества кластеров для анализа
-    max_k = 20
-    sse = calculate_sse(data, max_k)
+    for n_clusters in cluster_range:
+        kmeans = KMeans(n_clusters=n_clusters, random_state=42, n_init=10, max_iter=10)
+        kmeans.fit(numeric_df)
+        print('1 done')
+        
+        # Within-cluster sum of squares
+        wcss.append(kmeans.inertia_)
+        print('2 done')
+        
+        # Silhouette score
+        cluster_labels = kmeans.labels_
+        silhouette_avg = silhouette_score(numeric_df, cluster_labels)
+        silhouette_scores.append(silhouette_avg)
+        print('3 done')
 
-    # Построение графика метода локтя
-    plt.figure(figsize=(10, 6))
-    plt.plot(range(1, max_k + 1), sse, marker='o')
-    plt.xlabel('Количество кластеров')
-    plt.ylabel('SSE')
-    plt.title('Метод локтя для определения оптимального количества кластеров')
-    plt.grid(True)
-    plt.savefig('fig.png')
-    plt.show()
+    # Plot the Elbow method results
+    plt.figure(figsize=(12, 6))
+    plt.subplot(1, 2, 1)
+    plt.plot(cluster_range, wcss, marker='o')
+    plt.title('Elbow Method')
+    plt.xlabel('Number of Clusters')
+    plt.ylabel('WCSS')
+
+    # Plot the Silhouette scores
+    plt.subplot(1, 2, 2)
+    plt.plot(cluster_range, silhouette_scores, marker='o')
+    plt.title('Silhouette Scores')
+    plt.xlabel('Number of Clusters')
+    plt.ylabel('Silhouette Score')
+
+    plt.tight_layout()
+    plt.savefig('analiz.png')
+
 
 
 def visual():
@@ -51,10 +70,11 @@ def visual():
     
 
     # Save the figure as a PNG file
-    fig.write_image("plot.png")
+    # fig.write_image("plot.png")
 
     # Show the plot
     fig.show()
 
 
-visual()
+# visual()
+elbow()
