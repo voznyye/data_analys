@@ -32,11 +32,14 @@ def normalizuj():
     X_scaled_df = pd.DataFrame(X_scaled, columns=['YearEncoded', 'NameEncoded', 'SexEncoded', 'NumberEncoded'])
 
     # Сохранение нормализованных данных в CSV файл
-    X_scaled_df.to_csv('babyNames_normalized.csv', index=False)
+    X_scaled_df.to_csv('babyNames_normalized.csv', index=False, header=False, mode='a')
 
     # Объединение нормализованных данных и оригинальных данных в нужном порядке
     combined_df = y.copy()
     combined_df[['YearEncoded', 'NameEncoded', 'SexEncoded', 'NumberEncoded']] = X_scaled_df[['YearEncoded', 'NameEncoded', 'SexEncoded', 'NumberEncoded']]
 
     # Запись объединенных данных в новый CSV файл
-    combined_df.to_csv('babyNames_combined.csv', index=False)
+    combined_df.to_csv('babyNames_combined.csv', index=False, mode='a')
+    
+    
+normalizuj()

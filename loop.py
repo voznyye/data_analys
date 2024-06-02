@@ -1,5 +1,4 @@
 import calcul
-from visualization import visual
 
 def main():
     
@@ -14,7 +13,7 @@ def main():
     print(f"iteration {c}: completed")
 
     # Перераспределение кластеров
-    for _ in range(10):  # Количество итераций перераспределения
+    for _ in range(7):  # Количество итераций перераспределения
         calcul.newCentroidy()
         calcul.przypiszKrotkomNumeryKlastrów()
         calcul. utwórzKlastry()
@@ -27,4 +26,3 @@ def main():
 
     
 main()
-visual()

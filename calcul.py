@@ -10,7 +10,7 @@ with open('babyNames_normalized.csv', newline='\n') as f:
 
 dane_unpacked = np.array([[float(item) for item in row] for row in dane_normal])
 
-liczbaKlastrów = 15
+liczbaKlastrów = 14
 klastry = []
 Centroidy = []
 
@@ -69,7 +69,7 @@ def utwórzKlastry():
         klastry[cluster_index].append(krotka)
 
 def wypiszCentroidy():
-    centroidy_df = pd.DataFrame(Centroidy, columns=['YearOfBirth', 'NameEncoded', 'SexEncoded', 'NumberOfBirth'])
+    centroidy_df = pd.DataFrame(Centroidy, columns=['YearEncoded', 'NameEncoded', 'SexEncoded', 'NumberOfBirth'])
     centroidy_df['Cluster'] = range(len(Centroidy))
     centroidy_df.to_csv('wynik.csv', index=False, mode='a')
 
@@ -78,7 +78,7 @@ def wypiszKlastry():
     for numer in range(len(Centroidy)):
         for krotka in klastry[numer]:
             klastry_data.append(list(krotka[:4]) + [numer])
-    klastry_df = pd.DataFrame(klastry_data, columns=['YearOfBirth', 'NameEncoded', 'SexEncoded', 'NumberOfBirth', 'ClusterNumber'])
+    klastry_df = pd.DataFrame(klastry_data, columns=['YearEncoded', 'NameEncoded', 'SexEncoded', 'NumberOfBirth', 'ClusterNumber'])
     klastry_df.to_csv('wynik.csv', index=False, mode='a')
 
 def newCentroide(klaster):

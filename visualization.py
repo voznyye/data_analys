@@ -37,14 +37,24 @@ def elbov():
 
 
 def visual():
-        
-    # Чтение данных из файла wynik.csv
-    data = pd.read_csv('wynik.csv')
-    # Визуализация данных с использованием Plotly
-    fig = px.scatter(data, x='YearOfBirth', y='NameEncoded', color='Cluster',
-                    hover_data=['YearOfBirth', 'NameEncoded', 'SexEncoded', 'NumberOfBirth'],
-                    title="K-Means Clustering Visualization")
+
+    # Load the updated CSV file
+    merged_df = pd.read_csv('wynik_combined.csv')
+
+    # Create a scatter plot
+    fig = px.scatter(merged_df, 
+                    x='YearOfBirth', 
+                    y='Number', 
+                    color='ClusterNumber',
+                    hover_data=['Name', 'Sex', 'Number'],
+                    title='Number of Births by Year and Cluster')
     
+
+    # Save the figure as a PNG file
+    fig.write_image("plot.png")
+
+    # Show the plot
     fig.show()
+
 
 visual()
