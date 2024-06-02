@@ -8,13 +8,10 @@ import matplotlib
 
 def elbow():
     matplotlib.use('agg')
-    # Load the normalized data
     normalized_df = pd.read_csv('babyNames_normalized.csv')
 
-    # Remove non-numeric columns if any
     numeric_df = normalized_df.select_dtypes(include=[np.number])
 
-    # Determine the optimal number of clusters using the Elbow method
     wcss = []
     silhouette_scores = []
     cluster_range = range(2, 5)
@@ -24,17 +21,14 @@ def elbow():
         kmeans.fit(numeric_df)
         print('1 done')
         
-        # Within-cluster sum of squares
         wcss.append(kmeans.inertia_)
         print('2 done')
         
-        # Silhouette score
         cluster_labels = kmeans.labels_
         silhouette_avg = silhouette_score(numeric_df, cluster_labels)
         silhouette_scores.append(silhouette_avg)
         print('3 done')
 
-    # Plot the Elbow method results
     plt.figure(figsize=(12, 6))
     plt.subplot(1, 2, 1)
     plt.plot(cluster_range, wcss, marker='o')
@@ -42,7 +36,6 @@ def elbow():
     plt.xlabel('Number of Clusters')
     plt.ylabel('WCSS')
 
-    # Plot the Silhouette scores
     plt.subplot(1, 2, 2)
     plt.plot(cluster_range, silhouette_scores, marker='o')
     plt.title('Silhouette Scores')
@@ -56,10 +49,8 @@ def elbow():
 
 def visual():
 
-    # Load the updated CSV file
     merged_df = pd.read_csv('wynik_combined.csv')
 
-    # Create a scatter plot, columns YearOfBirth,YearEncoded,Name,NameEncoded,Sex,SexEncoded,Number,NumberEncoded,ClusterNumber
     fig = px.scatter(merged_df, 
                     x='YearOfBirth', 
                     y='Name ', 
@@ -68,12 +59,9 @@ def visual():
                     title='Number of Births by Year and Cluster')
     
 
-    # Save the figure as a PNG file
     fig.write_image("plot2.png")
 
-    # Show the plot
     fig.show()
 
 
 visual()
-# elbow()

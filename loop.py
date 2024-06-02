@@ -2,18 +2,16 @@ import calcul
 
 def main():
     
-    # Основной алгоритм
-    calcul.kmeans_plus_plus()  # Инициализация центроидов с использованием K-Means++
-    calcul.przypiszKrotkomNumeryKlastrów()  # Присвоение точкам ближайших кластеров
-    calcul.utwórzKlastry()  # Создание кластеров
-    # wypiszCentroidy()  # Запись центроидов
-    calcul.wypiszKlastry()  # Запись кластеров
+    calcul.kmeans_plus_plus() 
+    calcul.przypiszKrotkomNumeryKlastrów() 
+    calcul.utwórzKlastry() 
+    # wypiszCentroidy() 
+    calcul.wypiszKlastry()
 
     c = 0
     print(f"iteration {c}: completed")
 
-    # Перераспределение кластеров
-    for _ in range(6):  # Количество итераций перераспределения
+    for _ in range(6):
         calcul.newCentroidy()
         calcul.przypiszKrotkomNumeryKlastrów()
         calcul. utwórzKlastry()
